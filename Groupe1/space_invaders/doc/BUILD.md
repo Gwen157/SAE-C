@@ -9,18 +9,11 @@ Ce document décrit le fonctionnement du Makefile et les cibles utiles. Les inst
 
 ## Cibles principales
 - `make` / `make all` : compile ce qui est disponible et produit `build/space_invaders`.
-- `make run` / `make run-sdl` : lance la vue console ou SDL3.
+- `make run-console` / `make run-sdl` : lance la vue console ou SDL3.
 - `make check-deps` : affiche l’état des dépendances détectées et la liste des sources compilées.
 - `make clean` : nettoie objets et binaire.
-- `make valgrind` : exécute la vue SDL avec `valgrind.supp` (Linux/WSL).
-
-## Options utiles
-- `V=1` : trace complète des commandes de compilation.
-- `CFLAGS="-g -O0 -Wall"` : build debug.
-- `CPPFLAGS` / `LDFLAGS` : ajouter des chemins personnalisés (ex: préfixe SDL3 non standard).
+- `make valgrind` : exécute la vue SDL & console avec `valgrind.supp` (Linux/WSL).
 
 ## Stubs
 Si une dépendance manque, la vue correspondante est remplacée par un stub qui affiche un message clair et retourne un code d’erreur, tout en laissant le binaire exécutable.
 
-## Ajout d’une nouvelle vue
-1) Créer `src/view_nouvelle.c` + header. 2) Ajouter une détection dans le Makefile (via pkg-config). 3) Ajouter la sélection dans `main.c`. Le reste (compilation conditionnelle) suit le schéma existant.
