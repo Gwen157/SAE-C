@@ -48,6 +48,10 @@ static const char* glyph_pattern(char c) {
         case '7': return "#####""    #""   # ""  #  "" #   "" #   "" #   ";
         case '8': return " ### ""#   #""#   #"" ### ""#   #""#   #"" ### ";
         case '9': return " ### ""#   #""#   #"" ### ""    #""#   #"" ### ";
+        case '<': return "  #  "" #   ""#    ""#    ""#    "" #   ""  #  ";
+        case '>': return "  #  ""   # ""    #""    #""    #""   # ""  #  ";
+        case '#': return " # # "" # # ""#####"" # # ""#####"" # # "" # # ";
+        case '.': return "     ""     ""     ""     ""     ""  #  ""     ";
         case ' ': return NULL; /* espace géré par l'avance */
         case ':': return "     ""  #  ""     ""  #  ""     ""     ""  #  ";
         case '-': return "     ""     ""     "" ### ""     ""     ""     ";
@@ -58,12 +62,6 @@ static const char* glyph_pattern(char c) {
 static int draw_glyph(SDL_Renderer* renderer, int x, int y, char ch, SDL_Color color, int pixel, int spacing) {
     char c = (char)toupper((unsigned char)ch);
     const char* pat = glyph_pattern(c);
-
-    if (c == ' ') return pixel * 3 + spacing;
-    if (c == '>') { draw_rect(renderer, x, y+pixel, pixel, pixel, color); draw_rect(renderer, x+pixel, y, pixel, pixel, color); draw_rect(renderer, x+pixel, y+pixel*2, pixel, pixel, color); draw_rect(renderer, x+pixel*2, y, pixel, pixel, color); draw_rect(renderer, x+pixel*2, y+pixel*2, pixel, pixel, color); return pixel * 4 + spacing; }
-    if (c == '<') { draw_rect(renderer, x+pixel*2, y+pixel, pixel, pixel, color); draw_rect(renderer, x+pixel, y, pixel, pixel, color); draw_rect(renderer, x+pixel, y+pixel*2, pixel, pixel, color); draw_rect(renderer, x, y, pixel, pixel, color); draw_rect(renderer, x, y+pixel*2, pixel, pixel, color); return pixel * 4 + spacing; }
-    if (c == '#') { draw_rect(renderer, x, y+pixel, pixel, pixel*3, color); draw_rect(renderer, x+pixel*2, y+pixel, pixel, pixel*3, color); draw_rect(renderer, x, y+pixel*2, pixel*3, pixel, color); draw_rect(renderer, x, y+pixel, pixel*3, pixel, color); return pixel * 4 + spacing; }
-    if (c == '.') { draw_rect(renderer, x+pixel, y+pixel*4, pixel, pixel, color); return pixel * 3 + spacing; }
 
     int advance = pixel * 5 + spacing; /* largeur fixe 5 colonnes */
     if (!pat) return advance;
