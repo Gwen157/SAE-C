@@ -53,7 +53,7 @@ static const char* glyph_pattern(char c) {
         case '#': return " # # "" # # ""#####"" # # ""#####"" # # "" # # ";
         case '.': return "     ""     ""     ""     ""     ""  #  ""     ";
         case ' ': return NULL; /* espace géré par l'avance */
-        case ':': return "     ""  #  ""     ""  #  ""     ""     ""  #  ";
+        case ':': return "     ""  #  ""     ""     ""     ""  #  ""     ";
         case '-': return "     ""     ""     "" ### ""     ""     ""     ";
         default:  return NULL;
     }
