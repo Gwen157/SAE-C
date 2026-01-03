@@ -13,6 +13,7 @@
 #include <SDL3/SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* Configuration de la fenêtre et du rendu */
 #define LARGEUR_FENETRE  800
@@ -324,27 +325,57 @@ int vue_sdl_executer(EtatJeu* e) {
             int largeur_fenetre, hauteur_fenetre;
             SDL_GetRenderOutputSize(contexte->rendu, &largeur_fenetre, &hauteur_fenetre);
             
-            /* Grand rectangle rouge central */
-            dessiner_rectangle(contexte->rendu, largeur_fenetre / 2 - 200, hauteur_fenetre / 2 - 150, 400, 300, couleur_rouge);
+            /* Grand rectangle rouge central encore plus large */
+            const int zone_w = 620;
+            const int zone_h = 440;
+            const int zone_x = largeur_fenetre / 2 - zone_w / 2;
+            const int zone_y = hauteur_fenetre / 2 - zone_h / 2;
+            dessiner_rectangle(contexte->rendu, zone_x, zone_y, zone_w, zone_h, couleur_rouge);
             
             /* Cadre blanc autour */
             SDL_SetRenderDrawColor(contexte->rendu, 255, 255, 255, 255);
-            SDL_FRect cadre = {(float)(largeur_fenetre / 2 - 210), (float)(hauteur_fenetre / 2 - 160), 420, 320};
+            SDL_FRect cadre = {(float)(zone_x - 10), (float)(zone_y - 10), zone_w + 20, zone_h + 20};
             SDL_RenderRect(contexte->rendu, &cadre);
             
-            /* Afficher "GAME OVER" au dessus */
+            /* Afficher "GAME OVER" agrandi */
             SDL_Color couleur_blanche = {255, 255, 255, 255};
-            bitmap_draw_text(contexte->rendu, largeur_fenetre / 2 - 90, hauteur_fenetre / 2 - 210, "GAME OVER", couleur_blanche);
+            const int titre_size = 6;
+            const int titre_spacing = 7;
+            const int titre_glyph_w = titre_size * 4 + titre_spacing;
+            const int titre_len = 9; /* "GAME OVER" (avec espace) */
+            int titre_w = titre_len * titre_glyph_w;
+            int titre_x = largeur_fenetre / 2 - titre_w / 2;
+            int titre_y = zone_y + 60;
+            bitmap_draw_text_custom(contexte->rendu, titre_x, titre_y, "GAME OVER", couleur_blanche, titre_size, titre_spacing);
             
-            /* Afficher le score en chiffres */
+            /* Afficher le score légèrement plus grand */
             int score_final = etatjeu_obtenir_score(e);
             char score_texte[32];
             snprintf(score_texte, sizeof(score_texte), "SCORE %d", score_final);
-            bitmap_draw_text(contexte->rendu, largeur_fenetre / 2 - 80, hauteur_fenetre / 2 - 40, score_texte, couleur_jaune);
+            const int score_size = 4;
+            const int score_spacing = 5;
+            const int score_glyph_w = score_size * 4 + score_spacing;
+            int score_w = (int)strlen(score_texte) * score_glyph_w;
+            int score_x = largeur_fenetre / 2 - score_w / 2;
+            int score_y = zone_y + zone_h / 2 - 15;
+            bitmap_draw_text_custom(contexte->rendu, score_x, score_y, score_texte, couleur_jaune, score_size, score_spacing);
             
-            /* Instructions visuelles: boutons verticaux */
-            dessiner_rectangle(contexte->rendu, largeur_fenetre / 2 - 130, hauteur_fenetre / 2 + 20, 260, 30, couleur_cyan);
-            bitmap_draw_text(contexte->rendu, largeur_fenetre / 2 - 115, hauteur_fenetre / 2 + 27, "ENTREE POUR CONTINUER", couleur_blanche);
+            /* Instructions visuelles: bouton bleu très large, texte taille standard */
+            const int box_largeur = 500;
+            const int box_hauteur = 90;
+            const int box_x = largeur_fenetre / 2 - box_largeur / 2;
+            const int box_y = zone_y + zone_h - box_hauteur - 20;
+            dessiner_rectangle(contexte->rendu, box_x, box_y, box_largeur, box_hauteur, couleur_cyan);
+
+            const char* msg_continue = "ENTREE POUR CONTINUER";
+            const int btn_size = BITMAP_FONT_DEFAULT_SIZE;
+            const int btn_spacing = BITMAP_FONT_DEFAULT_SPACING;
+            const int btn_glyph_w = btn_size * 4 + btn_spacing;
+            const int btn_glyph_h = btn_size * 5;
+            int text_w = (int)strlen(msg_continue) * btn_glyph_w;
+            int text_x = largeur_fenetre / 2 - text_w / 2 - 10; 
+            int text_y = box_y + (box_hauteur - btn_glyph_h) / 2;
+            bitmap_draw_text_custom(contexte->rendu, text_x, text_y, msg_continue, couleur_blanche, btn_size, btn_spacing);
             
             SDL_RenderPresent(contexte->rendu);
             
