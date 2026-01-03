@@ -22,6 +22,7 @@ Objectif : vérifier rapidement les fonctionnalités principales sur les deux vu
 `make valgrind` — utilise `valgrind.supp` pour ignorer les fuites « reachable » de SDL/ncurses/Mesa. Investiguer seulement les « definitely » ou « indirectly lost ».
 
 ## Dépannage rapide
-- Vue absente → `make check-deps` et installer la lib manquante (voir [INSTALL.md](INSTALL.md).
+- Vue absente → `make check-deps` et installer la lib manquante (voir [INSTALL.md](INSTALL.md)).
 - Entrée clavier qui ne répond pas → vérifier les bindings dans le menu Options, inclure Entrée/Espace pour le tir en console.
+
 
