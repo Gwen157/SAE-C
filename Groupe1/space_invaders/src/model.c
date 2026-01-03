@@ -92,6 +92,11 @@ struct EtatJeu {
     int nombre_particules;
 };
 
+/* Ligne logique du vaisseau (utilisée pour collisions et condition de défaite) */
+static int ligne_vaisseau(const EtatJeu* e) {
+    return e ? e->hauteur - 2 : 0;
+}
+
 /* Ajoute un projectile au tableau interne si possible. */
 static void ajouter_projectile(EtatJeu* e, int x, int y, int dy, int proprietaire) {
     if (!e) return;
@@ -275,7 +280,7 @@ void etatjeu_mettre_a_jour(EtatJeu* e, double dt) {
             }
         } else {
             /* projectile ennemi : collision avec vaisseau */
-            int y_vaisseau = e->hauteur - 2;
+            int y_vaisseau = ligne_vaisseau(e);
             if (e->projectiles[i].x == e->joueur.entite.x && e->projectiles[i].y == y_vaisseau) {
                 e->projectiles[i].actif = 0;
                 e->vies -= 1;
@@ -357,6 +362,17 @@ void etatjeu_mettre_a_jour(EtatJeu* e, double dt) {
             ajouter_projectile(e, e->ennemis[pick].entite.x, e->ennemis[pick].entite.y + 1, +1, 1);
         }
     }
+
+    /* Défaite immédiate si un ennemi atteint la ligne du vaisseau */
+    int ligne_joueur = ligne_vaisseau(e);
+    for (int i = 0; i < e->nombre_ennemis; ++i) {
+        if (!e->ennemis[i].entite.vivant) continue;
+        if (e->ennemis[i].entite.y >= ligne_joueur) {
+            e->game_over = 1;
+            e->vies = 0;
+            break;
+        }
+    }
 }
 
 void etatjeu_deplacer_vaisseau(EtatJeu* e, int dir) {
@@ -368,7 +384,7 @@ void etatjeu_deplacer_vaisseau(EtatJeu* e, int dir) {
 
 void etatjeu_vaisseau_tirer(EtatJeu* e) {
     if (!e) return;
-    int y_vaisseau = e->hauteur - 2;
+    int y_vaisseau = ligne_vaisseau(e);
     ajouter_projectile(e, e->joueur.entite.x, y_vaisseau - 1, -1, 0);
 }
 
